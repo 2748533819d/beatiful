@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wujiejie.qushuge.mapper.BooksMapper">
+
+    <resultMap id="BaseResultMap" type="com.wujiejie.qushuge.entity.Books">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="isbnCode" column="isbn_code" jdbcType="VARCHAR"/>
+        <result property="bookName" column="book_name" jdbcType="VARCHAR"/>
+        <result property="bookAuthor" column="book_author" jdbcType="VARCHAR"/>
+        <result property="bookType" column="book_type" jdbcType="VARCHAR"/>
+        <result property="bookLocation" column="book_location" jdbcType="VARCHAR"/>
+        <result property="bookStatus" column="book_status" jdbcType="VARCHAR"/>
+        <result property="bookDescription" column="book_description" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,book_name,book_author,
+        book_type,book_location,book_status,
+        book_description,create_time,update_time
+    </sql>
+    <select id="findBorrowPage" resultType="com.wujiejie.qushuge.entity.Books">
+        select * from sys_books,sys_book_borrow
+        <where>
+            <if test="bookName !='' and bookName != null">
+                and book_name like #{bookName}
+            </if>
+            <if test="isbnCode !='' and isbnCode != null">
+                and isbn_code like #{isbnCode}
+            </if>
+                and user_id = #{userId} and borrow_state = 0 and sys_books.id=sys_book_borrow.book_id
+        </where>
+        limit #{pageBeginNum},#{pageSize}
+    </select>
+</mapper>
